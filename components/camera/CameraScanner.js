@@ -7,10 +7,10 @@ import {
   Text,
   Dimensions,
 } from "react-native";
-import { Camera } from "expo-camera";
+import { CameraView, CameraType } from "expo-camera";
 
 export function CameraScanner({ onScan }) {
-  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [facing, setFacing] = useState(CameraType.back);
   const cameraRef = useRef(null);
   const { width } = Dimensions.get("window");
   const height = width * 1.5; // 3:2 aspect ratio
@@ -19,7 +19,6 @@ export function CameraScanner({ onScan }) {
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync({
         quality: 0.8,
-        skipProcessing: false,
       });
 
       onScan(photo.uri);
@@ -27,21 +26,20 @@ export function CameraScanner({ onScan }) {
   };
 
   const toggleCameraType = () => {
-    setType((current) =>
-      current === Camera.Constants.Type.back
-        ? Camera.Constants.Type.front
-        : Camera.Constants.Type.back
+    setFacing((current) =>
+      current === CameraType.back
+        ? CameraType.front
+        : CameraType.back
     );
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.cameraContainer}>
-        <Camera
+        <CameraView
           ref={cameraRef}
           style={[styles.camera, { height, width }]}
-          type={type}
-          ratio="4:3"
+          facing={facing}
         >
           <View style={styles.scanOverlay}>
             <View style={styles.scanTarget}>
@@ -51,7 +49,7 @@ export function CameraScanner({ onScan }) {
               <View style={styles.cornerBR} />
             </View>
           </View>
-        </Camera>
+        </CameraView>
       </View>
 
       <View style={styles.controls}>
