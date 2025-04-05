@@ -1,4 +1,3 @@
-// components/camera/CameraScanner.js
 import React, { useState, useRef } from "react";
 import {
   View,
@@ -7,10 +6,10 @@ import {
   Text,
   Dimensions,
 } from "react-native";
-import { CameraView, CameraType } from "expo-camera";
+import { CameraView } from "expo-camera";
 
 export function CameraScanner({ onScan }) {
-  const [facing, setFacing] = useState(CameraType.back);
+  const [facing, setFacing] = useState("back");
   const cameraRef = useRef(null);
   const { width } = Dimensions.get("window");
   const height = width * 1.5; // 3:2 aspect ratio
@@ -26,11 +25,7 @@ export function CameraScanner({ onScan }) {
   };
 
   const toggleCameraType = () => {
-    setFacing((current) =>
-      current === CameraType.back
-        ? CameraType.front
-        : CameraType.back
-    );
+    setFacing((current) => (current === "back" ? "front" : "back"));
   };
 
   return (
@@ -70,7 +65,6 @@ export function CameraScanner({ onScan }) {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
