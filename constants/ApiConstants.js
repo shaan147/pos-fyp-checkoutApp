@@ -1,8 +1,7 @@
 // constants/ApiConstants.js
 export const API_URL = "http://your-api-endpoint.com/api";
 export const IMAGE_RECOGNITION_URL =
-  "http://your-api-endpoint.com/api/image-recognition";
-
+  "http://192.168.1.15:8000/api/recognition/recognize";
 export const ROLES = {
   CUSTOMER: "customer",
   CASHIER: "cashier",

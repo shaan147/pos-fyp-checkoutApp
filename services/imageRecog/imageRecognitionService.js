@@ -1,7 +1,7 @@
 // services/imageRecog/imageRecognitionService.js
-import * as FileSystem from 'expo-file-system';
-import * as ImageManipulator from 'expo-image-manipulator';
-import { IMAGE_RECOGNITION_URL } from '../../constants/ApiConstants';
+import * as FileSystem from "expo-file-system";
+import * as ImageManipulator from "expo-image-manipulator";
+import { IMAGE_RECOGNITION_URL } from "../../constants/ApiConstants";
 
 class ImageRecognitionService {
   // Recognize product from image
@@ -9,43 +9,43 @@ class ImageRecognitionService {
     try {
       // First compress the image to reduce upload size
       const compressedImage = await this.compressImage(imageUri);
-      
+
       // Create form data for the image upload
       const formData = new FormData();
-      formData.append('image', {
+      formData.append("file", {
+        // Changed from 'image' to 'file'
         uri: compressedImage,
-        name: 'product_image.jpg',
-        type: 'image/jpeg',
+        name: "product_image.jpg",
+        type: "image/jpeg",
       });
-
       // Send the image to recognition service
       const response = await fetch(IMAGE_RECOGNITION_URL, {
-        method: 'POST',
+        method: "POST",
         body: formData,
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       });
 
       // Parse the response
       const data = await response.json();
-      
+      console.log("Response data:", data);
       if (response.ok) {
         return {
           success: true,
-          ...data
+          ...data,
         };
       } else {
         return {
           success: false,
-          error: data.error || 'Failed to recognize product'
+          error: data.error || "Failed to recognize product",
         };
       }
     } catch (error) {
-      console.error('Error recognizing product:', error);
+      console.error("Error recognizing product:", error);
       return {
         success: false,
-        error: error.message || 'An error occurred during image recognition'
+        error: error.message || "An error occurred during image recognition",
       };
     }
   }
@@ -54,12 +54,12 @@ class ImageRecognitionService {
   async compressImage(uri) {
     try {
       const fileInfo = await FileSystem.getInfoAsync(uri);
-      
+
       // If the image is already small, don't compress
       if (!fileInfo.exists) {
-        throw new Error('File does not exist');
+        throw new Error("File does not exist");
       }
-      
+
       if (fileInfo.size && fileInfo.size < 300000) {
         return uri;
       }
@@ -81,10 +81,10 @@ class ImageRecognitionService {
           format: ImageManipulator.SaveFormat.JPEG,
         }
       );
-      
+
       return result.uri;
     } catch (error) {
-      console.error('Error compressing image:', error);
+      console.error("Error compressing image:", error);
       return uri; // Return original URI if compression fails
     }
   }
